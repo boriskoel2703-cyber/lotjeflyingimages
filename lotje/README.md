@@ -23,6 +23,10 @@ Next.js 15 (App Router) site met eigen CMS op `/admin`. Draait op Vercel; alle c
 6. Ga naar `https://<project>.vercel.app/admin`, log in en upload via **Pagina's → home** de hero- en CTA-foto.
 7. Domein: Settings → Domains → `lotjezeewolde.nl` toevoegen en de DNS-records bij de registrar aanpassen.
 
+### Tijdelijk wachtwoord op de hele site
+Zet in Vercel `SITE_PASSWORD` (bijv. `lotje2026`) → redeploy. Bezoekers zien dan eerst een "Binnenkort online"-pagina met wachtwoordveld; Google indexeert niets. Toegang blijft 30 dagen onthouden. Ingelogde beheerders hoeven het niet in te vullen; `/admin` blijft gewoon bereikbaar.
+**Live gaan:** verwijder `SITE_PASSWORD` en redeploy.
+
 ### Optioneel: aanvragen ook per mail
 Aanvragen komen altijd binnen onder **Aanvragen** in de beheeromgeving. Wil je ze ook per mail:
 maak een account op [resend.com](https://resend.com), verifieer het domein en zet

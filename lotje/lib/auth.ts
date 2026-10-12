@@ -10,8 +10,8 @@ function secret() {
 export function adminCredentials() {
   const dev = process.env.NODE_ENV !== 'production';
   return {
-    email: (process.env.ADMIN_EMAIL || 'admin@lotje.nl').toLowerCase(),
-    password: process.env.ADMIN_PASSWORD || (dev ? 'lotje' : ''),
+    email: (process.env.ADMIN_EMAIL || 'admin@lotje.nl').trim().toLowerCase(),
+    password: (process.env.ADMIN_PASSWORD || '').trim() || (dev ? 'lotje' : ''),
   };
 }
 
@@ -46,4 +46,23 @@ export async function verifySession(token?: string | null): Promise<string | nul
   } catch {
     return null;
   }
+}
+
+/* ---------- Tijdelijk wachtwoord voor de hele site ---------- */
+export const SITE_COOKIE = 'lotje_toegang';
+export const sitePassword = () => (process.env.SITE_PASSWORD || '').trim();
+
+/** Token hangt af van het wachtwoord: wijzig je SITE_PASSWORD, dan moet iedereen opnieuw invoeren. */
+export async function siteToken() {
+  return hmac(`site:${sitePassword()}`);
+}
+
+export async function verifySiteToken(token?: string | null) {
+  if (!sitePassword()) return true;
+  if (!token) return false;
+  const expected = await siteToken();
+  if (expected.length !== token.length) return false;
+  let diff = 0;
+  for (let i = 0; i < token.length; i++) diff |= token.charCodeAt(i) ^ expected.charCodeAt(i);
+  return diff === 0;
 }
